@@ -61,7 +61,7 @@ void clean()
 		}
 	}
 }
-
+*/
 void COUNT(string filename)
 {
 	ifstream fin;
@@ -70,16 +70,113 @@ void COUNT(string filename)
 	
 	while (getline(fin, line))
 	{
-		if ( line != " ")
-		{
-			
 			N++;
 			//cout << line << endl;
+	}
+}
+
+void printMAP(int c)
+{
+	ofstream fout;
+	string filename = "map-out-";
+	filename += std::to_string(c) + ".txt";
+	fout.open(filename.c_str());
+	/*
+	for (int h = 0; h < load.size(); h++)
+	{
+		//cout << load[h];
+		//cout << endl;
+	}
+	*/
+	for (int f = 1; f < visited.size(); f++)
+	{
+		if (visited[f] != " ")
+		{
+			fout << visited[f] << " " << countW[f];
+			fout << endl;
 		}
 		
 	}
+	visited.clear();
+	countW.clear();
 }
-*/
+
+int search(string word)
+{
+	for (int v = 0; v < visited.size(); v++)
+	{
+		if (word == visited[v])
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
+void processVEC()
+{
+	int i = 0;
+	int sea = 0;
+	sort(load.begin(), load.end());
+	for (int h = 0; h < load.size(); h++)
+	{
+			string temp = load[h];
+			sea = search(temp);
+			i = 0;
+			if (sea == 0)
+			{
+				for (int o = 0; o < load.size(); o++)
+				{
+					if (load[o] == temp)
+					{
+						i++;
+					}
+
+				}
+				visited.push_back(temp);
+				countW.push_back(i);
+			}
+	}
+	load.clear();
+}
+
+void loadVec(std::string filename)//function to separtate words individually
+{
+	//cout << filename << endl;
+	ifstream fin;
+	fin.open(filename.c_str());
+	string s;
+	int j = 0;
+	int c = 0;
+
+	while (getline(fin, s))
+	{
+		//cout << s << endl;
+		j = 0;
+		c = 0;
+		//N++;
+		for (int h = 0; h < s.size() ; h++)
+		{
+			c++;
+			if ((s.at(h) == ' '))
+			{
+				load.push_back(s.substr(j, c - 1));
+				c = 0;
+				j = h + 1;
+			}
+			if ((h + 1) == s.size() )
+			{
+				load.push_back(s.substr(j, c));
+			}
+		}
+	}
+	fin.close();
+	processVEC();
+	//cout << "work";
+	//clean();
+}
+
 void split(string filename, string split)
 {
 	ifstream fin;
@@ -88,12 +185,12 @@ void split(string filename, string split)
 	string file;
 	string line;
 	int j = 0;
-	int k = 0;
+	int k = 1;
 	int f = 0;
 	int c = 1;
 	if (!((N / M) % 2 == 0))
 	{
-		j++;
+		j = 1;
 	}
 	//cout << N << endl;
 	//cout << M;
@@ -110,7 +207,7 @@ void split(string filename, string split)
 				getline(fin, line);
 				if (j == 1 && (i+1) == (N/M))
 				{
-					k = 1;
+					k = 0;
 				}
 				
 				//cout << file << endl;
@@ -119,101 +216,19 @@ void split(string filename, string split)
 
 			}
 			fout.close();
+			loadVec(file);
+			printMAP(c);
 			c++;
 		}
 
 	}
 	fin.close();
 }
-void loadVec(std::string filename)//function to separtate words individually
-{
-	//cout << 1;
-	ifstream fin;
-	fin.open(filename.c_str());
-	string s;
-	int j = 0;
-	int c = 0;
 
-	while (getline(fin, s))
-	{
-		//cout << s << endl;
-		j = 0;
-		c = 0;
-		N++;
-		for (int h = 0; h < s.size() - 1; h++)
-		{
-			c++;
-			if ((s.at(h) == ' '))
-			{
-				load.push_back(s.substr(j, c - 1));
-				c = 0;
-				j = h + 1;
-			}
-			if ((h + 1) == s.size() - 1)
-			{
-				load.push_back(s.substr(j, c));
-			}
-		}
-	}
-	fin.close();
-	//cout << "work";
-	//clean();
-}
 /**/
-void print()
-{
-	ofstream fout;
-	fout.open("map.txt");
-	for (int h = 0; h < load.size(); h++)
-	{
-		//cout << load[h];
-		//cout << endl;
-	}
-	for (int f = 0; f < visited.size(); f++)
-	{
-		fout << visited[f] << " " << countW[f];
-		fout << endl;
-	}
 
-}
 
-int search(string word)
-{
-	for (int v = 0; v < visited.size(); v++)
-	{
-		if (word == visited[v])
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
 
-void processVEC()
-{
-	int i = 0;
-	int sea = 0;
-	sort(load.begin(), load.end());
-	for (int h = 0; h < load.size(); h++)
-	{
-		string temp = load[h];
-		sea = search(temp);
-		i = 0;
-		if (sea == 0)
-		{
-			for (int o = 0; o < load.size(); o++)
-			{
-				if (load[o] == temp)
-				{
-					i++;
-				}
-
-			}
-			visited.push_back(temp);
-			countW.push_back(i);
-		}
-	}
-}
 
 void process(string filename)
 {
@@ -291,9 +306,9 @@ void process(string filename)
 	fin.close();
 	fout.close();
 	string outfile = "output.txt";
-	cout << 1;
-	//COUNT(outfile);
-	loadVec(outfile);
+	//cout << 1;
+	COUNT(outfile);
+	//loadVec(outfile);
 }
 
 
@@ -308,9 +323,8 @@ int main(int argc, char * argv[])
 	geek >> M;
 
 	process(argv[1]);
-	processVEC();
 	split("output.txt", argv[3]);
-	print();
+	//print();
 	/*
 	for (i = 0; i < MAX; i++)
 	{
