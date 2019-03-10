@@ -24,6 +24,7 @@ vector<string> load;
 std::vector<int> countW;
 int wordCount = 0;
 vector<string> visited;
+std::vector<int> help;
 
 /*
 void *printHello(void *arg)
@@ -62,6 +63,84 @@ void clean()
 	}
 }
 */
+void calculateSKEWED()
+{ 
+	//N = 15; 
+	//M = 3;
+	int num = N;
+	cout << N;
+	//cout << 1;
+	/**/
+	int flag = 0;
+	for (int i = 0; i < M; i++)
+	{
+		help.push_back(1);
+		//help[i-1] = 1;
+		//k += (N / M);
+	}
+	num -= M;
+
+	for(int k=0; k < num; k++)
+	{
+
+		for (int u = 0; u < M; u++)
+		{
+			if (num <= 2)
+			{
+				break;
+			}
+			help[u] += u + 1;
+			num -= (u + 1);
+			flag = u;
+			k = 0;
+		}
+		if (num <= 2)
+		{
+			break;
+		}
+	}
+		
+	
+	//cout << flag << num << endl;
+	if (num > 0)
+	{
+		if (num == 2 && flag == 0)
+		{
+			help[flag] += 1;
+			help[flag+1] += 1;
+		}
+		if (num == 2 && flag == 1)
+		{
+			help[flag + 1] += 2;
+		}
+		if (num == 1 && flag == 0)
+		{
+			help[flag] += 1;
+		}
+		if (num == 1 && flag == 1)
+		{
+			help[flag + 1] += 1;
+		}
+		if (num == 2 && flag == 2)
+		{
+			help[flag + 2] += 2;
+		}
+		if (num == 1 && flag == 2)
+		{
+			help[flag + 2] += 1;
+		}
+	}
+	
+
+	/**/ 
+	for (int i = 0; i < M; i++)
+	{
+		cout << help[i] << endl;
+		//k += (N / M);
+	}
+	
+	
+}
 void COUNT(string filename)
 {
 	ifstream fin;
@@ -179,6 +258,7 @@ void loadVec(std::string filename)//function to separtate words individually
 
 void split(string filename, string split)
 {
+	//cout << split;
 	ifstream fin;
 	ofstream fout;
 	fin.open(filename.c_str());
@@ -221,6 +301,26 @@ void split(string filename, string split)
 			c++;
 		}
 
+	}
+
+	if (split == "skewed")
+	{
+		calculateSKEWED();
+		for (int i = 0; i < help.size(); i++)
+		{
+			file = "split-";
+			file += std::to_string(c) + ".txt";
+			fout.open(file.c_str());
+			for (int h = 0; h < help[i]; h++)
+			{
+				getline(fin, line);
+				fout << line << endl;
+			}
+			fout.close();
+			loadVec(file);
+			printMAP(c);
+			c++;
+		}
 	}
 	fin.close();
 }
@@ -289,14 +389,17 @@ void process(string filename)
 			str[j] = tolower(str[j]);
 		}
 
+		string red;
 		stringstream line2(str);
 		while (line2 >> str)
 		{
 			str += " ";
-			fout << str;
+			red += str;
 			co++;
 			//N++;
 		}
+		string blue= red.substr(0, red.size() - 1);
+		fout << blue;
 		if (co != 0)
 		{
 			fout << endl;
@@ -318,10 +421,17 @@ int main(int argc, char * argv[])
 {
 	//pthread_t threads[MAX];
 	//int i, rs;
+	/**/
+	if (argc < 2)
+	{
+		exit(EXIT_FAILURE);
+	}
 	string num = argv[2];
 	stringstream geek(num);
 	geek >> M;
-
+	
+	
+	//cout << argv[3];
 	process(argv[1]);
 	split("output.txt", argv[3]);
 	//print();
