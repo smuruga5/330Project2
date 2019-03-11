@@ -68,7 +68,7 @@ void calculateSKEWED()
 	//N = 15; 
 	//M = 3;
 	int num = N;
-	cout << N;
+	//cout << N;
 	//cout << 1;
 	/**/
 	int flag = 0;
@@ -132,13 +132,13 @@ void calculateSKEWED()
 	}
 	
 
-	/**/ 
+	/* 
 	for (int i = 0; i < M; i++)
 	{
 		cout << help[i] << endl;
 		//k += (N / M);
 	}
-	
+	*/
 	
 }
 void COUNT(string filename)
@@ -419,7 +419,8 @@ void process(string filename)
 
 int main(int argc, char * argv[])
 {
-	//pthread_t threads[MAX];
+	
+	
 	//int i, rs;
 	/**/
 	if (argc < 2)
@@ -429,7 +430,7 @@ int main(int argc, char * argv[])
 	string num = argv[2];
 	stringstream geek(num);
 	geek >> M;
-	
+	pthread_t threads[M];
 	
 	//cout << argv[3];
 	process(argv[1]);
