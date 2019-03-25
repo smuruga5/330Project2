@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : main.cpp
+// Name        : MapReduce.cpp
 // Author      : Sujjanaraj Muruganandam
 // Description : CSE 330 Project2 Map Reduce
 //============================================================================
