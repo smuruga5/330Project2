@@ -247,6 +247,7 @@ void loadReduce(int y, int trigger)
 	ifstream fin;
 	string file;
 	int fire = 0;//Variable to see if the trigger is for masterREDUCE or reduce and assign the value accordingly.
+
 	if (trigger == 1)
 	{
 		file = "map-out-";
@@ -259,7 +260,6 @@ void loadReduce(int y, int trigger)
 		file += std::to_string(masterREDUCE) + ".txt";
 		fire = masterREDUCE;
 	}
-
 	fin.open(file.c_str());
 	string s;
 	while (fin)
@@ -333,14 +333,14 @@ void printReduce(int y)
 	visited.clear();
 	countW.clear();
 	Rcount++;
-	Mcount += y;
+	Mcount = y + 1;
 }
 
 //Function to reduce the map-outs to the correspoint reduce-outs by the 'R' value.
 void *reduceMAP(void *arg)
 {
-	int y = (intptr_t)arg;
 	pthread_mutex_lock(&lock_it);
+	int y = (intptr_t)arg;
 	loadReduce(y, 1);
 	printReduce(y);
 	pthread_mutex_unlock(&lock_it);
@@ -493,14 +493,11 @@ void *reduceFINAL(void *)
 {
 	pthread_mutex_lock(&lock_it);
 	loadReduce(R, 2);
-
 	for (int j = 0; j < visited.size(); j++)
 	{
 		cout << visited[j] << " " << countW[j];
 		cout << endl;
 	}
-	visited.clear();
-	countW.clear();
 	pthread_mutex_unlock(&lock_it);
 	pthread_exit(NULL);
 }
